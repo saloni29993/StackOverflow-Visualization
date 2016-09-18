@@ -1,0 +1,415 @@
+<html>
+<head>
+    <title>Social visualization</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->  
+  <script type="text/javascript" src="./Chart.js"></script>
+  <script type="text/javascript" src="./query.js"></script>
+</head>
+<body>
+<section id="one" class="wrapper special">
+                <div class="inner">
+                    <header class="major">
+                        <h2>Social visualization</h2>
+                    </header>
+                </div>
+</section> 
+&nbsp;&nbsp;&nbsp;<strong>Pattern findings</strong>
+    <ul>
+        The visualization shown below indicate the query interest of two users. The queries are classified into eight groups and the graph shows the number of times a user has searched a particular query from that group. The first graph compares the interest of user 1 with user 2. The second graph compares the interest of user 1 with all the users and the third graph compares the interest of user 2 with all the users.
+        <li>The x-axis shows the type of queries searched while surfing the website.</li> 
+        <li>The y-axis shows the count.</li>
+        <li>In the drop down list provided above the graph, please select two users. To see the best performance of visualization, select from the below given options:
+            <ol>
+                <li>user 1 as A0008 and user2 as A0020</li>
+                <li>user1 as A0047 and user 2 as A0074 </li>
+                <li>user 1 as B0026 and user 2 as B0026</li>
+                <li>user 1 as A0047 and user 2 as A0080.</li>
+            </ol>
+    </ul> 
+&nbsp;&nbsp;&nbsp;<strong>Application</strong>
+    <ul>
+        This visualization can be used by school teachers to compare the performance of various students. If student searches for a particular query, then the teacher knows he is trying to learn about that topic. The teachers can also compare the efforts of two students and analyse how fast they learn.If student searches particular query for fewer times than other student it means that he/she has a good grasping power. For a student, this visualization can show them the importance of a topic to others. For example, from the graph we see that 'arrays' is searched maximum times. This can make students realize the importance of that topic and motivate them to learn about 'arrays'.
+<br>
+<br>
+<br>
+                <div>
+                <select id="select1">
+                    <option>Select user1</option>
+                </select>
+                <select id="select2">
+                    <option>Select user2</option>
+                </select>
+                <ul class="actions">
+                    <br>
+                  <center> <li><a class="button special" onClick="myFunction('select1','select2');">Show me the graph</a></li></center> 
+                </ul>
+                </div>
+                    <!-- <div class="features"> -->
+                        <!-- <div class="feature"> -->
+                            <div>
+                            <center><p>Comparing User1 and User2.</p></center>
+                            <br>
+                            <center><canvas id="svChart" width="600" height="350"></canvas></center>
+                            <!-- <div style="float:left;" id="contex"></div> -->
+                            </div>
+                            <br>
+                        <!-- </div> -->
+                        <!-- <div class="feature"> -->
+                            <div>                        
+                            <center><p>Comparing User1 with the all the users.</p></center>
+                            <br>
+                            <center><canvas id="svChart1" width="600" height="350"></canvas></center>
+                            <!-- <div style="float:left;" id="contex1"></div> -->
+                            </div>
+                            <br>
+                        <!-- </div> -->
+                        <!-- <div class="feature"> -->
+                            <div>
+                            <center><p>Comparing User2 with the all the users.</p></center>
+                            <br>
+                            <center><canvas id="svChart2" width="600" height="350"></canvas></center>
+                            <!-- <div style="float:left;" id="contex2"></div> -->
+                        </div>
+                            <br>
+                        <!-- </div> -->
+                    <!-- </div> -->
+                <!-- </div>            -->
+                          
+<script>
+
+//sorting array of users
+var user_list=[];
+var prev = query[0].u_id;
+for(var j=0; j<query.length-1; j++)
+{
+  prev = query[j].u_id;
+  if(prev != query[j+1].u_id)
+  {
+    user_list.push(query[j+1].u_id);
+  }
+}
+user_list.sort();
+
+//document.write(user_list+ "<br>");
+var string_list = [];
+
+for(var y=0;y<user_list.length;y++)
+{
+    string_list.push(user_list[y]);
+}
+
+//document.write(string_list);
+
+//add variables to drop down1
+var drop1 = document.getElementById('select1');
+//document.write("<br>" +arr);
+for(var i = 0; i<user_list.length; i++)
+{
+    var ul1 = user_list[i];
+    var a = document.createElement("option");
+    a.textContent = ul1;
+    a.value = ul1;
+    drop1.appendChild(a);
+}
+var user_id = document.getElementById('select1');
+
+//add variables to drop down2
+var drop2 = document.getElementById('select2');
+//document.write("<br>" +arr);
+for(var i = 0; i<user_list.length; i++)
+{
+    var ul2 = user_list[i];
+    var a2 = document.createElement("option");
+    a2.textContent = ul2;
+    a2.value = ul2;
+    drop2.appendChild(a2);
+}
+
+
+function myFunction(id1,id2)
+{
+var user_id = document.getElementById(id1).value;
+var user_id2 = document.getElementById(id2).value;
+
+//classification of various queries.
+var classify_user = [];
+var classify_user1 =[];
+var classify_total = [];
+
+//string 0,sort 1,method 2,loop 3,class 4,array 5,inheritance 6,object 7
+classify_user[0] = Number(0);
+classify_user[1] = Number(0);
+classify_user[2] = Number(0);
+classify_user[3] = Number(0);
+classify_user[4] = Number(0);
+classify_user[5] = Number(0);
+classify_user[6] = Number(0);
+classify_user[7] = Number(0);
+
+classify_user1[0] = Number(0);
+classify_user1[1] = Number(0);
+classify_user1[2] = Number(0);
+classify_user1[3] = Number(0);
+classify_user1[4] = Number(0);
+classify_user1[5] = Number(0);
+classify_user1[6] = Number(0);
+classify_user1[7] = Number(0);
+
+classify_total[0] = Number(0);
+classify_total[1] = Number(0);
+classify_total[2] = Number(0);
+classify_total[3] = Number(0);
+classify_total[4] = Number(0);
+classify_total[5] = Number(0);
+classify_total[6] = Number(0);
+classify_total[7] = Number(0);
+
+
+for(var i=0; i<query.length; i++)
+{
+  if(query[i].u_id == user_id)
+  {
+    var s=query[i].query.toLowerCase();
+    if(s.indexOf("string") > -1 || s.indexOf('tostring') > -1 || s.indexOf('case') > -1 || s.indexOf('compare') > -1)
+    {
+      classify_user[0] += Number(1);
+    }
+
+    if(s.indexOf('sort') > -1 || s.indexOf('merge') > -1 || s.indexOf('partition') > -1  || s.indexOf('trivial') > -1  || s.indexOf('increasing') > -1  || s.indexOf('insertion') > -1 || s.indexOf('divide') > -1  || s.indexOf('conquer') > -1  || s.indexOf('recursive') > -1)
+    {
+      classify_user[1] += Number(1);
+    }
+
+    if(s.indexOf('method') > -1 || s.indexOf('main') > -1  || s.indexOf('askto') > -1  || s.indexOf('private') > -1 || s.indexOf('protected') > -1 || s.indexOf('public') > -1  || s.indexOf('recursive') > -1  || s.indexOf('get') > -1  || s.indexOf('set') > -1 || s.indexOf('static') > -1  || s.indexOf('mutator') > -1)
+    {
+      classify_user[2] += Number(1);
+    }
+
+    if(s.indexOf('loop') > -1 || s.indexOf('do') > -1  || s.indexOf('while') > -1  || s.indexOf('for') > -1  || s.indexOf('switch') > -1 || s.indexOf('enhanced') > -1)
+    {
+      classify_user[3] += Number(1);
+    }
+
+    if(s.indexOf('class') > -1 || s.indexOf('abstract') > -1  || s.indexOf('sub') > -1  || s.indexOf('call') > -1 || s.indexOf('super') > -1  || s.indexOf('wrapper') > -1 || s.indexOf('mutating') > -1)
+    {
+      classify_user[4] += Number(1);
+    }
+
+    if(s.indexOf('array') > -1)
+    {
+      classify_user[5] += Number(1);
+    }
+
+    if(s.indexOf('inheritance') > -1)
+    {
+      classify_user[6] += Number(1);
+    }
+
+    if(s.indexOf('object') > -1 || s.indexOf('constructor') > -1)
+    {
+      classify_user[7] += Number(1);
+    }
+
+  }
+  if (query[i].u_id == user_id2)
+  {
+    var s1=query[i].query.toLowerCase();
+    if(s1.indexOf("string") > -1 || s1.indexOf('tostring') > -1 || s1.indexOf('case') > -1 || s1.indexOf('compare') > -1)
+    {
+      classify_user1[0] += Number(1);
+    }
+
+    if(s1.indexOf('sort') > -1 || s1.indexOf('merge') > -1 || s1.indexOf('partition') > -1  || s1.indexOf('trivial') > -1  || s1.indexOf('increasing') > -1  || s1.indexOf('insertion') > -1 || s1.indexOf('divide') > -1  || s1.indexOf('conquer') > -1  || s1.indexOf('recursive') > -1)
+    {
+      classify_user1[1] += Number(1);
+    }
+
+    if(s1.indexOf('method') > -1 || s1.indexOf('main') > -1  || s1.indexOf('askto') > -1  || s1.indexOf('private') > -1 || s1.indexOf('protected') > -1 || s1.indexOf('public') > -1  || s1.indexOf('recursive') > -1  || s1.indexOf('get') > -1  || s1.indexOf('set') > -1 || s1.indexOf('static') > -1  || s1.indexOf('mutator') > -1)
+    {
+      classify_user1[2] += Number(1);
+    }
+
+    if(s1.indexOf('loop') > -1 || s1.indexOf('do') > -1  || s1.indexOf('while') > -1  || s1.indexOf('for') > -1  || s1.indexOf('switch') > -1 || s1.indexOf('enhanced') > -1)
+    {
+      classify_user1[3] += Number(1);
+    }
+
+    if(s1.indexOf('class') > -1 || s1.indexOf('abstract') > -1  || s1.indexOf('sub') > -1  || s1.indexOf('call') > -1 || s1.indexOf('super') > -1  || s1.indexOf('wrapper') > -1 || s1.indexOf('mutating') > -1)
+    {
+      classify_user1[4] += Number(1);
+    }
+
+    if(s1.indexOf('array') > -1 || s1.indexOf('search') > -1  || s1.indexOf('comparator') > -1 || s1.indexOf('splitting') > -1  || s1.indexOf('empty') > -1)
+    {
+      classify_user1[5] += Number(1);
+    }
+
+    if(s1.indexOf('inheritance') > -1)
+    {
+      classify_user1[6] += Number(1);
+    }
+
+    if(s1.indexOf('object') > -1 || s1.indexOf('constructor') > -1)
+    {
+      classify_user1[7] += Number(1);
+    }
+
+
+  }
+   
+    var s2=query[i].query.toLowerCase();
+    if(s2.indexOf("string") > -1 || s2.indexOf('tostring') > -1 || s2.indexOf('case') > -1 || s2.indexOf('compare') > -1)
+    {
+      classify_total[0] += Number(1);
+    }
+
+    if(s2.indexOf('sort') > -1 || s2.indexOf('merge') > -1 || s2.indexOf('partition') > -1  || s2.indexOf('trivial') > -1  || s2.indexOf('increasing') > -1  || s2.indexOf('insertion') > -1 || s2.indexOf('divide') > -1  || s2.indexOf('conquer') > -1  || s2.indexOf('recursive') > -1)
+    {
+      classify_total[1] += Number(1);
+    }
+
+    if(s2.indexOf('method') > -1 || s2.indexOf('main') > -1  || s2.indexOf('askto') > -1  || s2.indexOf('private') > -1 || s2.indexOf('protected') > -1 || s2.indexOf('public') > -1  || s2.indexOf('recursive') > -1  || s2.indexOf('get') > -1  || s2.indexOf('set') > -1 || s2.indexOf('static') > -1  || s2.indexOf('mutator') > -1)
+    {
+      classify_total[2] += Number(1);
+    }
+
+    if(s2.indexOf('loop') > -1 || s2.indexOf('do') > -1  || s2.indexOf('while') > -1  || s2.indexOf('for') > -1  || s2.indexOf('switch') > -1 || s2.indexOf('enhanced') > -1)
+    {
+      classify_total[3] += Number(1);
+    }
+
+    if(s2.indexOf('class') > -1 || s2.indexOf('abstract') > -1  || s2.indexOf('sub') > -1  || s2.indexOf('call') > -1 || s2.indexOf('super') > -1  || s2.indexOf('wrapper') > -1 || s2.indexOf('mutating') > -1)
+    {
+      classify_total[4] += Number(1);
+    }
+
+    if(s2.indexOf('array') > -1 || s2.indexOf('search') > -1  || s2.indexOf('comparator') > -1 || s2.indexOf('splitting') > -1  || s2.indexOf('empty') > -1)
+    {
+      classify_total[5] += Number(1);
+    }
+
+    if(s2.indexOf('inheritance') > -1)
+    {
+      classify_total[6] += Number(1);
+    }
+
+    if(s2.indexOf('object') > -1 || s2.indexOf('constructor') > -1)
+    {
+      classify_total[7] += Number(1);
+    }
+    
+
+}
+//document.write(JSON.stringify(classify_user));
+//document.write(JSON.stringify(classify_user1));
+//document.write(JSON.stringify(classify_total));
+
+
+
+var svData = {
+    labels: ["string","sort","method","loop","class","array","inheritance","object"],
+    datasets: [
+        {
+            label: "User 1",
+            fillColor: "rgba(255,0,0,0.5)",
+            strokeColor: "rgba(220,220,220,1)",
+            pointColor: "rgba(255,0,0,0.5)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(220,220,220,1)",
+            data: classify_user  
+        },
+        {
+            label: "User 2",
+            fillColor: "rgba(0,255,0,0.5)",
+            strokeColor: "rgba(192,192,192,1)",
+            pointColor: "rgba(0,255,0,0.5)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(220,220,220,1)",
+            data: classify_user1
+        },
+        // {
+        //     label: "Total",
+        //     fillColor: "rgba(255,255,0,0.2)",
+        //     strokeColor: "rgba(192,192,192,1)",
+        //     pointColor: "rgba(220,220,220,1)",
+        //     pointStrokeColor: "#fff",
+        //     pointHighlightFill: "#fff",
+        //     pointHighlightStroke: "rgba(220,220,220,1)",
+        //     data: classify_total   
+        // }
+    ]
+};
+
+var svData2 = {
+    labels: ["string","sort","method","loop","class","array","inheritance","object"],
+    datasets: [
+        {
+            label: "User 1",
+            fillColor: "rgba(255,0,0,0.5)",
+            strokeColor: "rgba(220,220,220,1)",
+            pointColor: "rgba(255,0,0,0.5)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(220,220,220,1)",
+            data: classify_user  
+        },
+        
+        {
+            label: "Total",
+            fillColor: "rgba(255,255,0,0.2)",
+            strokeColor: "rgba(220,220,220,1)",
+            pointColor: "rgba(255,255,0,0.2)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(220,220,220,1)",
+            data: classify_total   
+        }
+    ]
+};
+
+var svData3 = {
+    labels: ["string","sort","method","loop","class","array","inheritance","object"],
+    datasets: [
+        
+        {
+            label: "User 2",
+            fillColor: "rgba(0,255,0,0.5)",
+            strokeColor: "rgba(220,220,220,1)",
+            pointColor: "rgba(0,255,0,0.5)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(220,220,220,1)",
+            data: classify_user1
+        },
+        {
+            label: "Total",
+            fillColor: "rgba(255,255,0,0.2)",
+            strokeColor: "rgba(220,220,220,1)",
+            pointColor: "rgba(225,225,0,0.2)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(220,220,220,1)",
+            data: classify_total   
+        }
+    ]
+};
+var contex = document.getElementById('svChart').getContext('2d');
+var clientsChart = new Chart(contex).Line(svData, {scaleOverride: true, scaleSteps: 15, scaleStepWidth:2});
+
+var contex1 = document.getElementById('svChart1').getContext('2d');
+var clientsChart1 = new Chart(contex1).Line(svData2,{scaleOverride: true, scaleSteps: 15, scaleStepWidth:15});
+
+var contex2 = document.getElementById('svChart2').getContext('2d');
+var clientsChart2 = new Chart(contex2).Line(svData3,{scaleOverride: true, scaleSteps: 15, scaleStepWidth:15});
+}
+</script>
+</body>
+</html>
+
+
