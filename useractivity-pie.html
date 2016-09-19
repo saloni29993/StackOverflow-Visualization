@@ -1,0 +1,271 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->  
+    <script type="text/javascript" src="./Chart.js"></script>
+    <script type="text/javascript" src="./Chart.js"></script>
+    <script type="text/javascript" src="./op.js"></script>
+    <script src="jquery-1.12.0.min.js"></script>
+    <title>User's activity shown using pie chart</title>
+  
+    <style type="text/css">
+    .pie-legend li span {
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    margin-right: 5px;
+    }
+    .pie-legend {
+        list-style: none;    
+    }
+    .doughnut-legend li span {
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    margin-right: 5px;
+    }
+    .doughnut-legend {
+        list-style: none;    
+    }
+    </style>
+</head>
+<body>
+<section id="one" class="wrapper special">
+    <div class="inner">
+        <header class="major">
+            <h2>Know the user's activity</h2>
+        </header>
+    </div>
+</section>
+&nbsp;&nbsp;&nbsp;<strong>Pattern findings</strong>
+<span style="padding-left:50px;">
+ <ul >
+        The visualization shown below indicate the user's activity for a particular type of query. 
+        <li>When you give the user ID as input to the input field, You see the activity of that user in the charts. The first chart shows activity of user while searching sort queries, the second while searching array, the third whie searching string queries and the fourth while searching class queries. To see the best performance of the chart, give user ID as A0084, A0041 or A0029.</li>
+        <li>The doughnut chart shows the number of scroll up, scroll down or clicks a user has made for that particular query</li>
+    </ul>
+</span>
+    
+&nbsp;&nbsp;&nbsp;<strong>Application</strong>
+    <ul>
+        This infomartion can be used by teachers to know what students are trying to learn. For example, if a student scrolls down on the search page and perform some clicks mean that he/she is interested to learn about that topic and thus surfing more and more to master the topic. But if a student scrolls down without performing clicks mean that he/she is just traversing the page without being actually interested.</ul>
+<br>
+<br>
+<br>                       
+                <div>
+                Enter User ID: <input id="user" type="text" name="user"></input><br>
+                <ul class="actions">
+                    <br>
+                    <center><li>
+                        <a class="button special" onClick="gen('user');">Show me the graph</a></li></center>
+                </ul>
+                </div>
+                <div class="features">
+                        <div class="feature">
+                            <p>User activity for sort queries.</p>
+                            <canvas style="float:left;" id="sortchart" width="200" height="200"></canvas> 
+                            <div style="float:left;" id="legend"></div>
+                            <br>
+                        </div>
+                        <div class="feature">
+                            <p>User activity for array queries.</p>
+                            <canvas style="float:left;" id="arraychart" width="200" height="200"></canvas>
+                            <div style="float:left;" id="legend1"></div>
+                            <br><br><br>
+                        </div>
+                        <div class="feature">
+                            <p>User activity for string queries.</p>
+                            <canvas style="float:left;" id="stringchart" width="200" height="200"></canvas>
+                            <div style="float:left;" id="legend2"></div>
+                            <br>
+                        </div>
+                        <div class="feature">
+                            <p>User activity for class queries.</p>
+                            <canvas style="float:left;" id="classchart" width="200" height="200"></canvas>
+                            <div style="float:left;" id="legend3"></div>
+                            <br>
+                        </div>
+                    </div>
+                </div>          
+<script>
+
+function gen(check)
+{
+
+
+var user_id = document.getElementById(check).value;  //"A0041";
+var sd_sort=0,su_sort=0,cc_sort=0;
+var sd_array=0,su_array=0,cc_array=0;
+var sd_string=0,su_string=0,cc_string=0;
+var sd_class=0,su_class=0,cc_class=0;
+
+for(var i=0;i<op_data.length;i++)
+{
+    if(user_id == op_data[i].u_id)
+    {
+        sd_sort = op_data[i].sort_down;
+        su_sort = op_data[i].sort_up;
+        cc_sort = op_data[i].sort_click;
+    }
+    if(user_id == op_data[i].u_id)
+    {
+        sd_array = op_data[i].array_down;
+        su_array = op_data[i].array_up;
+        cc_array = op_data[i].array_click;
+    }
+    if(user_id == op_data[i].u_id)
+    {
+        sd_string = op_data[i].string_down;
+        su_string = op_data[i].string_up;
+        cc_string = op_data[i].string_click;
+    }
+    if(user_id == op_data[i].u_id)
+    {
+        sd_class = op_data[i].class_down;
+        su_class = op_data[i].class_up;
+        cc_class = op_data[i].class_click;
+    }
+}
+
+
+
+
+var pie_data_sort = [
+    {
+        value: sd_sort,
+        color:"#000033",
+        highlight: "#FF5A5E",
+        label: "Scroll Up"
+    },
+    {
+        value: su_sort,
+        color: "#0000CC",
+        highlight: "#5AD3D1",
+        label: "Scroll Down"
+    },
+    {
+        value: cc_sort,
+        color: "#00FFCC",
+        highlight: "#FFC870",
+        label: "Click"
+    }   
+];
+
+var pie_data_array = [
+    {
+        value: sd_array,
+        color:"#660066",
+        highlight: "#FF5A5E",
+        label: "Scroll Up"
+    },
+    {
+        value: su_array,
+        color: "#9900CC",
+        highlight: "#5AD3D1",
+        label: "Scroll Down"
+    },
+    {
+        value: cc_array,
+        color: "#CC9999",
+        highlight: "#FFC870",
+        label: "Click"
+    } 
+];
+var pie_data_string = [
+    {
+        value: sd_string,
+        color:"#006633",
+        highlight: "#FF5A5E",
+        label: "Scroll Up"
+    },
+    {
+        value: su_string,
+        color: "#00FF33",
+        highlight: "#5AD3D1",
+        label: "Scroll Down"
+    },
+    {
+        value: cc_string,
+        color: "#99FF99",
+        highlight: "#FFC870",
+        label: "Click"
+    }
+];
+var pie_data_class = [
+    {
+        value: sd_class,
+        color:"#FF9966",
+        highlight: "#FF5A5E",
+        label: "Scroll Up"
+    },
+    {
+        value: su_class,
+        color: "#FFFF00",
+        highlight: "#5AD3D1",
+        label: "Scroll Down"
+    },
+    {
+        value: cc_class,
+        color: "#FFFF99",
+        highlight: "#FFC870",
+        label: "Click"
+    }
+];
+
+
+
+if(su_sort!=0 && sd_sort!=0 && cc_sort!=0)
+{
+    var pie_sort = document.getElementById('sortchart').getContext('2d');
+window.mysort = new Chart(pie_sort).Doughnut(pie_data_sort,{
+        legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
+    });
+
+var legend_sort = mysort.generateLegend();
+$("#legend").html(legend_sort);
+
+}
+
+
+if(su_array!=0 && sd_array!=0 && cc_array!=0)
+{
+    var pie_array = document.getElementById('arraychart').getContext('2d');
+window.myarray = new Chart(pie_array).Doughnut(pie_data_array,{
+        legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
+    });
+
+var legend_array = myarray.generateLegend();
+$("#legend1").html(legend_array);
+
+}
+
+if(su_string!=0 && sd_string!=0 && cc_string!=0)
+{
+    var pie_string = document.getElementById('stringchart').getContext('2d');
+window.mystring = new Chart(pie_string).Doughnut(pie_data_string,{
+        legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
+    });
+
+var legend_string = mystring.generateLegend();
+$("#legend2").html(legend_string);
+
+}
+
+if(su_class!=0 && sd_class!=0 && cc_class!=0)
+{
+    var pie_class = document.getElementById('classchart').getContext('2d');
+window.myclass = new Chart(pie_class).Doughnut(pie_data_class,{
+        legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
+    });
+
+var legend_class = myclass.generateLegend();
+$("#legend3").html(legend_class);
+
+}
+}
+</script>                           
+</body>
+</html>

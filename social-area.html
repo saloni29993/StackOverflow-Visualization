@@ -6,8 +6,9 @@
         <!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
         <link rel="stylesheet" href="assets/css/main.css" />
         <!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->  
-  <script type="text/javascript" src="./Chart.js"></script>
-  <script type="text/javascript" src="./query.js"></script>
+        <script type="text/javascript" src="./Chart.js"></script>
+        <script type="text/javascript" src="./query.js"></script>
+        <title>Interactive Social Visualization shown user Area Chart</title>
 </head>
 <body>
 <section id="one" class="wrapper special">
@@ -36,48 +37,36 @@
 <br>
 <br>
 <br>
-                <div>
-                <select id="select1">
-                    <option>Select user1</option>
-                </select>
-                <select id="select2">
-                    <option>Select user2</option>
-                </select>
-                <ul class="actions">
-                    <br>
-                  <center> <li><a class="button special" onClick="myFunction('select1','select2');">Show me the graph</a></li></center> 
-                </ul>
-                </div>
-                    <!-- <div class="features"> -->
-                        <!-- <div class="feature"> -->
-                            <div>
-                            <center><p>Comparing User1 and User2.</p></center>
-                            <br>
-                            <center><canvas id="svChart" width="600" height="350"></canvas></center>
-                            <!-- <div style="float:left;" id="contex"></div> -->
-                            </div>
-                            <br>
-                        <!-- </div> -->
-                        <!-- <div class="feature"> -->
-                            <div>                        
-                            <center><p>Comparing User1 with the all the users.</p></center>
-                            <br>
-                            <center><canvas id="svChart1" width="600" height="350"></canvas></center>
-                            <!-- <div style="float:left;" id="contex1"></div> -->
-                            </div>
-                            <br>
-                        <!-- </div> -->
-                        <!-- <div class="feature"> -->
-                            <div>
-                            <center><p>Comparing User2 with the all the users.</p></center>
-                            <br>
-                            <center><canvas id="svChart2" width="600" height="350"></canvas></center>
-                            <!-- <div style="float:left;" id="contex2"></div> -->
-                        </div>
-                            <br>
-                        <!-- </div> -->
-                    <!-- </div> -->
-                <!-- </div>            -->
+    <div>
+    <select id="select1">
+        <option>Select user1</option>
+    </select>
+    <select id="select2">
+        <option>Select user2</option>
+    </select>
+    <ul class="actions">
+        <br>
+      <center> <li><a class="button special" onClick="myFunction('select1','select2');">Show me the graph</a></li></center> 
+    </ul>
+    </div>
+    <div>
+    <center><p>Comparing User1 and User2.</p></center>
+    <br>
+    <center><canvas id="svChart" width="600" height="350"></canvas></center>
+    </div>
+    <br>
+    <div>                        
+    <center><p>Comparing User1 with the all the users.</p></center>
+    <br>
+    <center><canvas id="svChart1" width="600" height="350"></canvas></center>
+    </div>
+    <br>
+    <div>
+    <center><p>Comparing User2 with the all the users.</p></center>
+    <br>
+    <center><canvas id="svChart2" width="600" height="350"></canvas></center>
+    </div>
+<br>
                           
 <script>
 
@@ -94,7 +83,6 @@ for(var j=0; j<query.length-1; j++)
 }
 user_list.sort();
 
-//document.write(user_list+ "<br>");
 var string_list = [];
 
 for(var y=0;y<user_list.length;y++)
@@ -102,11 +90,8 @@ for(var y=0;y<user_list.length;y++)
     string_list.push(user_list[y]);
 }
 
-//document.write(string_list);
-
 //add variables to drop down1
 var drop1 = document.getElementById('select1');
-//document.write("<br>" +arr);
 for(var i = 0; i<user_list.length; i++)
 {
     var ul1 = user_list[i];
@@ -119,7 +104,6 @@ var user_id = document.getElementById('select1');
 
 //add variables to drop down2
 var drop2 = document.getElementById('select2');
-//document.write("<br>" +arr);
 for(var i = 0; i<user_list.length; i++)
 {
     var ul2 = user_list[i];
@@ -304,11 +288,6 @@ for(var i=0; i<query.length; i++)
     
 
 }
-//document.write(JSON.stringify(classify_user));
-//document.write(JSON.stringify(classify_user1));
-//document.write(JSON.stringify(classify_total));
-
-
 
 var svData = {
     labels: ["string","sort","method","loop","class","array","inheritance","object"],
@@ -333,16 +312,6 @@ var svData = {
             pointHighlightStroke: "rgba(220,220,220,1)",
             data: classify_user1
         },
-        // {
-        //     label: "Total",
-        //     fillColor: "rgba(255,255,0,0.2)",
-        //     strokeColor: "rgba(192,192,192,1)",
-        //     pointColor: "rgba(220,220,220,1)",
-        //     pointStrokeColor: "#fff",
-        //     pointHighlightFill: "#fff",
-        //     pointHighlightStroke: "rgba(220,220,220,1)",
-        //     data: classify_total   
-        // }
     ]
 };
 
